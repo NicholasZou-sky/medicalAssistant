@@ -26,7 +26,6 @@ export class TransformInterceptor<T>
 
     return next.handle().pipe(
       map((data) => {
-        // console.log(data);
         let message = 'SUCCESS';
         let realData = data || [];
         let code = 200;

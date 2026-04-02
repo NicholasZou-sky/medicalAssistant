@@ -39,7 +39,6 @@ axiosInstance.interceptors.response.use(
     return response.data;
   },
   (error: { status: number; response: { data: { data: any; message: string | string[] } } }) => {
-    console.log(error);
     const status: number = error.status;
     const tips = typeof error.response.data.message === "string" ? error.response.data.message : error.response.data.message[0];
     switch (status) {
@@ -121,15 +120,11 @@ export const SendMessageApi = async (params: SendMessageType) => {
     project.disabledStatus = false;
     throw new Error("模型响应失败");
   }
-  console.log("开始流式输出数据");
   while (true) {
     const { done, value } = await reader.read();
     if (done) {
-      console.log("大模型回复完毕");
       aiMessageObj.loadingCircle = false;
       project.disabledStatus = false;
-      console.log("会话列表数据");
-      console.log(project.chatListData);
       break;
     }
     // --------------处理模型回复的数据------------
@@ -139,7 +134,6 @@ export const SendMessageApi = async (params: SendMessageType) => {
     for (const part of parts) {
       if (part.trim() === "") continue;
       const aiMessage = JSON.parse(part) as AiMessageType;
-      console.log(aiMessage);
       // 取会话id
       if (aiMessage.role === "sessionId") {
         project.getSessionId(aiMessage.content);

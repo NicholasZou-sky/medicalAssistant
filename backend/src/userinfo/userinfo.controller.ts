@@ -8,7 +8,6 @@ export class UserinfoController {
   // 注册
   @Post('registeruser')
   async registerUser(@Body() body: RegisterDto) {
-    // console.log(body);
     // 比如密码和确认密码
     if (body.password !== body.confirmPassword) {
       throw new BadRequestException(['两次密码输入不一致']);

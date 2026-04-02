@@ -48,7 +48,6 @@ const userLogin = async () => {
   validators.isPhoneNumber(phoneNumber.value);
   validators.isPasswordValid(passWord.value);
   const res = await UserLoginApi({ phoneNumber: phoneNumber.value, password: passWord.value });
-  console.log(res);
   project.showLoginPopup = false;
   // 缓存本地缓存
   project.userLogin(res.data);

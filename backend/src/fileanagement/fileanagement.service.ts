@@ -51,13 +51,11 @@ export class FileanagementService {
     const loader =
       fileType === 'PDF' ? new PDFLoader(file.path) : new DocxLoader(file.path);
     const docs = await loader.load();
-    // console.log(docs);
     // 2.拆分文档（主要针对知识库上传的才拆分）
     const first = docs[0];
     for (let i = 1; i < docs.length; i++) {
       first.pageContent += '\n' + docs[i].pageContent;
     }
-    // console.log(first);
     let splitDocument: Document<Record<string, any>>[] = [];
     if (uploadType === 'UB') {
       // 按字符拆分，
@@ -321,13 +319,11 @@ export class FileanagementService {
       output_fields: ['docTitle', 'docText'],
       rerank: WeightedRanker([0.3, 0.8]),
     });
-    // console.log('搜索向量数据库结果');
-    // console.log(res.results);
+
     // 释放集合
     this.milvusclient.releaseCollection({ collection_name: collectionName });
     // 提取关键词
     const keyWordList = await this.extractKeywords(userQuestion);
-    console.log('提取到的关键词-------' + JSON.stringify(keyWordList));
     if (
       res.status.error_code === 'Success' &&
       res.status.code === 0 &&
@@ -339,8 +335,6 @@ export class FileanagementService {
         res.results,
         keyWordList.keyWord,
       );
-      console.log('关键词过滤出来的');
-      // console.log(filterDocList);
       // 匹配得到的标题
       let searchDocTitle: string[] = [];
       // 匹配得到的内容

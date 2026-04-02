@@ -28,7 +28,7 @@ const uploadFileType = "application/pdf,application/vnd.openxmlformats-officedoc
 // 文件上传
 import { UploadkbApi, DeleteFileKbApi, KbFileListApi } from "@/api/request";
 import { useFileUploader } from "@/api/useFileUploader";
-const { uploadFileItem, fileInputRef, triggerFileInput, handleFileChange } = useFileUploader({ page: "knowledge", uploadApi: UploadkbApi });
+const { uploadFileItem, triggerFileInput, handleFileChange } = useFileUploader({ page: "knowledge", uploadApi: UploadkbApi });
 // 引入图标
 import docxIcon from "@/assets/docx-icon.png";
 import pdfIcon from "@/assets/pdf-icon.png";
@@ -54,12 +54,10 @@ let count = 0;
 watch(
   () => project.knowledgePopup,
   async (newVal) => {
-    console.log(newVal);
     if (newVal) {
       count += 1;
       if (count === 1) {
         const res = await KbFileListApi();
-        console.log(res);
         uploadFileItem.value = res.data;
       }
     }

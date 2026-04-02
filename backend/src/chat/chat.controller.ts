@@ -32,8 +32,6 @@ export class ChatController {
       isKnowledgeBased,
       uploadImageList,
     } = body;
-    console.log('是否携带了图片');
-    console.log(uploadImageList);
     const userId = new Types.ObjectId(req.user.token);
     await this.chatService.combineConvo(
       userId,

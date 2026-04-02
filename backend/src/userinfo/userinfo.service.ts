@@ -18,14 +18,12 @@ export class UserinfoService {
   async registerUser(phoneNumber: string, password: string) {
     // 查询该手机号是否存在，不存在就存储数据库，存储则提示
     const queryAccount = await this.userInfoModel.find({ phoneNumber });
-    // console.log(queryAccount);
     if (queryAccount.length <= 0) {
       // 对密码加密的key
       const passwordKey = this.configService.get('PASSWORD_KEY') as string;
       const passwordHash = createHmac('sha256', passwordKey)
         .update(password)
         .digest('hex');
-      console.log(passwordHash);
 
       await this.userInfoModel.create({ phoneNumber, password: passwordHash });
       return { message: 'SUCCESS', result: [] };

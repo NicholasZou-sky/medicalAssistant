@@ -23,7 +23,6 @@ export function useFileUploader(options: UseFileUploaderOptions) {
     const input = env.target as HTMLInputElement;
     // 复制一份文件数组快照
     const files = Array.from(input.files || []);
-    console.log(files);
     // 清空input.value，防止下次选同一文件不触发change事件
     input.value = "";
     if (files.length <= 0) return false;
@@ -37,7 +36,6 @@ export function useFileUploader(options: UseFileUploaderOptions) {
       showValidateMessage("每次最多选择三个文件", "warning");
       return false;
     }
-    console.log(options.page);
 
     // 如果是对话框上传文件，最多只能上传三个
     if (options.page === "chatinput") {
@@ -65,7 +63,6 @@ export function useFileUploader(options: UseFileUploaderOptions) {
     const existingCount = uploadFileItem.value.length;
     // 视图层展示
     const formDataFiles = formData.getAll("file") as File[];
-    console.log(formDataFiles);
     formDataFiles.forEach((file) => {
       uploadFileItem.value.push({
         fileName: file.name,
@@ -81,7 +78,6 @@ export function useFileUploader(options: UseFileUploaderOptions) {
     // 上传服务器
     try {
       const res = await options.uploadApi(formData);
-      console.log(res);
       res.data.forEach((item, index) => {
         const targetIndex = existingCount + index;
         uploadFileItem.value[targetIndex].docId = item;
@@ -118,7 +114,7 @@ export function useImageUploader(options: UseImageUploaderOptions) {
     const input = env.target as HTMLInputElement;
     // 复制一份文件数组快照
     const files = Array.from(input.files || []);
-    console.log(files);
+
     // 清空input.value，防止下次选同一文件不触发change事件
     input.value = "";
     if (files.length <= 0) return false;
@@ -156,7 +152,6 @@ export function useImageUploader(options: UseImageUploaderOptions) {
     // 上传服务器
     try {
       const res = await options.uploadApi(formData);
-      console.log(res);
       uploadImageItem.value = [res.data];
       loading.close();
     } catch (error) {

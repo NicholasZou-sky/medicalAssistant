@@ -96,7 +96,6 @@ export class FileanagementController {
   ) {
     const userId = req.user.token;
     const wxnames = body.wxoriginalname || '';
-    console.log('原文件名', wxnames);
     // 存储返回给前端的文档id
     const documentId: Types.ObjectId[] = [];
     // 处理上传的文档(for遍历处理多文件，推荐使用队列处理)
@@ -107,7 +106,7 @@ export class FileanagementController {
     }));
     for (const file of fixedFiles || []) {
       // 1.读取文档
-      const { mergeTexts, splitDocument } =
+      const { mergeTexts } =
         await this.fileanagementService.readFile(file, 'UB');
       // 2.上传数据库
       const docId = await this.fileanagementService.uploadFile(
@@ -117,16 +116,14 @@ export class FileanagementController {
         'UB',
       );
       // 3.向量，存储向量数据库
-      const originalname = await this.fileanagementService.vectorStorage(
-        file,
-        splitDocument,
-        userId,
-        docId,
-      );
-      console.log(originalname);
+      // const originalname = await this.fileanagementService.vectorStorage(
+      //   file,
+      //   splitDocument,
+      //   userId,
+      //   docId,
+      // );
       documentId.push(docId);
     }
-    console.log('全部上传完毕');
     return { result: documentId, message: 'SUCCESS' };
   }
   // 删除知识库指定文件
@@ -169,9 +166,7 @@ export class FileanagementController {
     @Body() body: { wxoriginalname: string },
   ) {
     const userId = req.user.token;
-    console.log(files.file);
     const wxnames = body.wxoriginalname || '';
-    console.log('原文件名', wxnames);
 
     // 存储返回给前端的文档id
     const documentId: Types.ObjectId[] = [];
@@ -196,7 +191,6 @@ export class FileanagementController {
       );
       documentId.push(docId);
     }
-    console.log('全部上传完毕');
     return { result: documentId, message: 'SUCCESS' };
   }
   // 对话框删除指定文件
@@ -219,7 +213,6 @@ export class FileanagementController {
   @UseGuards(AuthGuard)
   @UseInterceptors(uploadFileImage)
   uploadImage(@UploadedFiles() files: { file: Express.Multer.File[] }) {
-    console.log(files);
     // 拼接图片地址，返回前端给用户看得到
     const baseUrl = this.configService.get<string>('IMAGE_BASE_URL_local');
     const imageUrl = `${baseUrl}/${files.file[0].filename}`;

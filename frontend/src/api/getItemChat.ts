@@ -3,7 +3,6 @@ import { SingleChatDataApi } from "@/api/request";
 import { projectStore } from "@/store/index";
 const project = projectStore();
 export const getItemChat = async (index: number, sessionId: string) => {
-  // console.log("会话id：" + sessionId);
   project.getSessIonIndex(index);
   project.getSessionId(sessionId);
   const loading = ElLoading.service({
@@ -13,7 +12,6 @@ export const getItemChat = async (index: number, sessionId: string) => {
   });
   project.chatWelcome = false;
   const res = await SingleChatDataApi({ sessionId });
-  console.log(res);
   project.messageList = res.data;
   loading.close();
 };

@@ -39,7 +39,6 @@ import { showValidateMessage } from "@/utils/validateMessage";
 // 逻辑层
 onMounted(async () => {
   const res = await GetChatListApi();
-  console.log(res);
   project.chatListData = res.data;
   // 获取当前对话下的数据
   if (project.sessionId !== "null") {
@@ -60,26 +59,22 @@ const createSession = () => {
 };
 // 删除会话
 const delteChat = (sessionId: string, content: string, index: number) => {
-  console.log("会话id----" + sessionId);
   ElMessageBox.confirm(`删除：${content}`, "删除对话后不可恢复", {
     confirmButtonText: "确定",
     cancelButtonText: "取消",
     type: "warning",
   })
     .then(async () => {
-      console.log("删除");
       try {
         await DeleteChatApi({ sessionId });
         project.chatListData.splice(index, 1);
         showValidateMessage("删除成功", "success", "no");
         createSession();
       } catch (error) {
-        console.log(error);
         showValidateMessage("删除失败", "warning");
       }
     })
     .catch(() => {
-      console.log("取消");
     });
 };
 </script>

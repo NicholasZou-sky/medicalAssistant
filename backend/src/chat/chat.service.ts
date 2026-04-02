@@ -155,8 +155,6 @@ export class ChatService {
       historyConvoList.push(messages);
     }
     // 调用模型
-    // console.log('对话数据');
-    // console.log(JSON.stringify(historyConvoList));
     this.modelResult(
       historyConvoList.splice(-21), //取最近的21条对话数据
       userId.toString(),
@@ -234,7 +232,6 @@ export class ChatService {
     const controller = new AbortController();
     // sessionId && sessionId !== 'null' ? sessionId.toString() : 'null' + 'abc';
     const userSessionId = sessionId ? sessionId.toString() : 'null';
-    console.log('调用模型传入了会话id' + userSessionId);
     controllerMap.set(userSessionId, controller);
     try {
       // 存储模型返回的结果
@@ -268,7 +265,6 @@ export class ChatService {
       if (!res) return false;
       for await (const chunk of res) {
         const chunObj = chunk.choices[0].delta;
-        // console.log(JSON.stringify(chunk));
         // 判断用户是否选择知识库回答，也就是触发工具调用
         if (chunObj.tool_calls && chunObj.tool_calls[0].function?.arguments) {
           toolCallArgsStr += chunObj.tool_calls[0].function.arguments;
@@ -286,9 +282,6 @@ export class ChatService {
             'clarified_question' in newQuestion &&
             newQuestion.clarified_question.trim() !== ''
           ) {
-            console.log(
-              '工具生成了新问题-------' + newQuestion.clarified_question,
-            );
             // 整理新的问题，查询知识库
             const res = await this.queryKb(
               stream,
@@ -302,7 +295,6 @@ export class ChatService {
             readFileList = res.readFileList;
           } else {
             // 工具没有生成新问题
-            console.log('工具没有生成新问题---------');
             const lastItem = messageList[messageList.length - 1];
             const res = await this.queryKb(
               stream,
@@ -318,7 +310,6 @@ export class ChatService {
         }
         // 用户没有选择知识库按钮
         if (chunObj.content) {
-          // console.log('用户没有选择知识库按钮--------');
           const returnRes = {
             role: 'assistant',
             content: chunk.choices[0].delta.content,
@@ -375,8 +366,6 @@ export class ChatService {
         );
       }
     } catch (error) {
-      console.log('调用模型出错');
-      console.log(error);
       this.logger.error('模型回复出错' + error);
       this.notifStream(stream, {
         role: 'error',
@@ -385,7 +374,6 @@ export class ChatService {
       });
     } finally {
       // 告知前端通知流结束
-      console.log('模型回复完毕');
       stream.end();
       controllerMap.delete(userSessionId);
     }

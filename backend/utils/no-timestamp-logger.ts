@@ -23,7 +23,6 @@ export class MyLogger implements LoggerService {
   }
   // 一般日志
   log(message: any) {
-    console.log('[LOG]', message);
     this.writeLog('log', message);
   }
   // 错误日志
@@ -43,7 +42,6 @@ export class MyLogger implements LoggerService {
   }
   //冗余日志
   verbose(message: any) {
-    console.log('[VERBOSE]', message);
     this.writeLog('verbose', message);
   }
 }
